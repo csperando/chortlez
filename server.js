@@ -12,23 +12,26 @@ const React = import("react");
 
 // network info
 const hostname = "127.0.0.1";
-const port = "3000";
+const port = "8080";
 
 // connect to jokes database
 const Jokes = require("./models/jokes");
 var database = "JOKES_DB";
 const mongodb_password = process.env.MONGODB_PASSWORD || "";
 if(mongodb_password == "") {
-    var connectionString = "mongodb://localhost:27017/" + database;
+    // var connectionString = "mongodb://localhost:27017/" + database;
+    console.error("DB password not found. Cannot form connection string.");
+
 } else {
     var connectionString = "mongodb+srv://sa:" + mongodb_password + "@cluster0.1lrnz.mongodb.net/" + database;
+    const connect = mongoose.connect(connectionString);
+    connect.then((db) => {
+        console.log(`Successfully connected to ${db.connection.name}`);
+    }).catch((error) => {
+        console.error(error);
+    });
+    
 }
-const connect = mongoose.connect(connectionString);
-connect.then((db) => {
-    console.log(`Successfully connected to ${db.connection.name}`);
-}).catch((error) => {
-    console.error(error);
-});
 
 // setup express app
 const app = express();
