@@ -7,8 +7,9 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const FileStore = require("session-file-store")(session)
+const passport = require("passport");
 
-const React = import("react");
+const Auth = require("./auth");
 
 // network info
 const port = process.env.PORT || "3000";
@@ -36,6 +37,7 @@ if(mongodb_password == "") {
 const app = express();
 app.use(bodyParser.json());
 
+
 // session
 app.use(session({
     name: "Session-id",
@@ -45,54 +47,25 @@ app.use(session({
     store: new FileStore()
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 // signed cookies
-// const secretCookieKey = "12345-12345-12345-12345";
-// app.use(cookieParser(secretCookieKey));
+const secretCookieKey = "12345-12345-12345-12345";
+app.use(cookieParser(secretCookieKey));
 
-// // authorization
-// function auth(req, res, next) {
-//     // console.log(req.session);
-//     if(!req.session.user) {
-//         var authHeader = req.headers.authorization;
-//         if(!authHeader) {
-//             var error = new Error("Authorization required.")
-//             res.setHeader("WWW-Authenticate", "Basic");
-//             res.statusCode = 401;
-//             // console.log("Auth required.");
-//             next(error);
-//         }
-//
-//         // "Basic lkajhdflkjashdflkjsd=="
-//         var auth = new Buffer(authHeader.split(" ")[1], "base64").toString().split(":");
-//         var user = auth[0];
-//         var password = auth[1];
-//
-//         if(user === "admin" && password === "password") {
-//             req.session.user = "admin";
-//             next();
-//         } else {
-//             var error = new Error("Authorization required.")
-//             res.setHeader("WWW-Authenticate", "Basic");
-//             res.statusCode = 401;
-//             // console.log("Auth invalid.");
-//             next(error);
-//         }
-//
-//     } else {
-//         if(req.session.user === "admin") {
-//             next();
-//
-//         } else {
-//             var error = new Error("Authorization required.")
-//             res.statusCode = 401;
-//             // console.log("Cookie invalid.");
-//             next(error);
-//
-//         }
-//     }
-// }
+// authorization: mostly done by passport
+function auth(req, res, next) {
+    if(!req.user) {
+        var error = new Error("Authorization required.")
+        error.status = 403;
+        return next(error);
+    } else {
+        next();
+    }
+}
+app.use(auth);
 
-// app.use(auth);
 
 // routes
 const jokeRouter = require("./routes/jokeRouter");
@@ -100,6 +73,9 @@ app.use("/jokes", jokeRouter);
 
 const userRouter = require("./routes/userRouter");
 app.use("/users", userRouter);
+
+// const defaultRouter = require("./routes/defaultRouter");
+// app.use("/", defaultRouter);
 
 // define default directory path for static pages
 app.use(express.static(__dirname + "/public/views"));
