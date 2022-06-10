@@ -11,7 +11,6 @@ const FileStore = require("session-file-store")(session)
 const React = import("react");
 
 // network info
-const hostname = "127.0.0.1";
 const port = process.env.PORT || "3000";
 
 // connect to jokes database
@@ -112,6 +111,6 @@ app.use((req, res, next) => {
 
 // setup server
 const server = http.createServer(app);
-server.listen(port, hostname, () => {
-    console.log(`Server up http://${hostname}:${port}`);
+server.listen(port, () => {
+    console.log(`Server up on port ${port}`);
 });
