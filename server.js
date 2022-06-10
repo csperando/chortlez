@@ -30,7 +30,7 @@ if(mongodb_password == "") {
     }).catch((error) => {
         console.error(error);
     });
-    
+
 }
 
 // setup express app
@@ -47,53 +47,53 @@ app.use(session({
 }));
 
 // signed cookies
-const secretCookieKey = "12345-12345-12345-12345";
-app.use(cookieParser(secretCookieKey));
+// const secretCookieKey = "12345-12345-12345-12345";
+// app.use(cookieParser(secretCookieKey));
 
-// authorization
-function auth(req, res, next) {
-    // console.log(req.session);
-    if(!req.session.user) {
-        var authHeader = req.headers.authorization;
-        if(!authHeader) {
-            var error = new Error("Authorization required.")
-            res.setHeader("WWW-Authenticate", "Basic");
-            res.statusCode = 401;
-            // console.log("Auth required.");
-            next(error);
-        }
+// // authorization
+// function auth(req, res, next) {
+//     // console.log(req.session);
+//     if(!req.session.user) {
+//         var authHeader = req.headers.authorization;
+//         if(!authHeader) {
+//             var error = new Error("Authorization required.")
+//             res.setHeader("WWW-Authenticate", "Basic");
+//             res.statusCode = 401;
+//             // console.log("Auth required.");
+//             next(error);
+//         }
+//
+//         // "Basic lkajhdflkjashdflkjsd=="
+//         var auth = new Buffer(authHeader.split(" ")[1], "base64").toString().split(":");
+//         var user = auth[0];
+//         var password = auth[1];
+//
+//         if(user === "admin" && password === "password") {
+//             req.session.user = "admin";
+//             next();
+//         } else {
+//             var error = new Error("Authorization required.")
+//             res.setHeader("WWW-Authenticate", "Basic");
+//             res.statusCode = 401;
+//             // console.log("Auth invalid.");
+//             next(error);
+//         }
+//
+//     } else {
+//         if(req.session.user === "admin") {
+//             next();
+//
+//         } else {
+//             var error = new Error("Authorization required.")
+//             res.statusCode = 401;
+//             // console.log("Cookie invalid.");
+//             next(error);
+//
+//         }
+//     }
+// }
 
-        // "Basic lkajhdflkjashdflkjsd=="
-        var auth = new Buffer(authHeader.split(" ")[1], "base64").toString().split(":");
-        var user = auth[0];
-        var password = auth[1];
-
-        if(user === "admin" && password === "password") {
-            req.session.user = "admin";
-            next();
-        } else {
-            var error = new Error("Authorization required.")
-            res.setHeader("WWW-Authenticate", "Basic");
-            res.statusCode = 401;
-            // console.log("Auth invalid.");
-            next(error);
-        }
-
-    } else {
-        if(req.session.user === "admin") {
-            next();
-
-        } else {
-            var error = new Error("Authorization required.")
-            res.statusCode = 401;
-            // console.log("Cookie invalid.");
-            next(error);
-
-        }
-    }
-}
-
-app.use(auth);
+// app.use(auth);
 
 // routes
 const jokeRouter = require("./routes/jokeRouter");
