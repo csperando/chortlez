@@ -12,7 +12,7 @@ const React = import("react");
 
 // network info
 const hostname = "127.0.0.1";
-const port = "8080";
+const port = process.env.PORT || "3000";
 
 // connect to jokes database
 const Jokes = require("./models/jokes");
