@@ -50,22 +50,22 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// signed cookies
-const secretCookieKey = "12345-12345-12345-12345";
-app.use(cookieParser(secretCookieKey));
-
-// authorization: mostly done by passport
-function auth(req, res, next) {
-    console.log(req);
-    if(!req.user) {
-        var error = new Error("Authorization required.")
-        error.status = 403;
-        return next(error);
-    } else {
-        next();
-    }
-}
-app.use(auth);
+// // signed cookies
+// const secretCookieKey = "12345-12345-12345-12345";
+// app.use(cookieParser(secretCookieKey));
+//
+// // authorization: mostly done by passport
+// function auth(req, res, next) {
+//     console.log(req);
+//     if(!req.user) {
+//         var error = new Error("Authorization required.")
+//         error.status = 403;
+//         return next(error);
+//     } else {
+//         next();
+//     }
+// }
+// app.use(auth);
 
 
 // routes
@@ -75,8 +75,6 @@ app.use("/jokes", jokeRouter);
 const userRouter = require("./routes/userRouter");
 app.use("/users", userRouter);
 
-// const defaultRouter = require("./routes/defaultRouter");
-// app.use("/", defaultRouter);
 
 // define default directory path for static pages
 app.use(express.static(__dirname + "/public/views"));
