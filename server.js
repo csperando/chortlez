@@ -56,6 +56,7 @@ app.use(cookieParser(secretCookieKey));
 
 // authorization: mostly done by passport
 function auth(req, res, next) {
+    console.log(req);
     if(!req.user) {
         var error = new Error("Authorization required.")
         error.status = 403;

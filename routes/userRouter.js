@@ -18,6 +18,7 @@ userRouter.route("/")
 
 userRouter.route("/signup")
 .post((req, res, next) => {
+    console.log(req);
     Users.register(new Users({username: req.body.username}), req.body.password,
         (error, user) => {
             if(error) {
@@ -40,6 +41,7 @@ userRouter.route("/signup")
 
 userRouter.route("/login")
 .post(passport.authenticate("local"), (req, res) => {
+    console.log(req);
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json");
     res.json({status: ok, user: user.username});
